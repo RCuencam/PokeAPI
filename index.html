@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+    <title>MODAL</title>
+</head>
+<style>
+    body
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .overlay
+    {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0,0,0,.6);
+    }
+    .modal
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        text-align: center;
+        width: 390px;
+        height: 300px;
+        background: white;
+        border-radius: 15px;
+        font-family: Arial,sans-serif;
+        position: relative;
+        animation-name: modalIn;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+    }
+    @keyframes modalIn
+    {
+        from
+        {
+            transform:translateY(-1000px)
+        }
+        40%
+        {
+            transform: translateY(10px);
+        }
+        60%
+        {
+            transform: translateY(-10px);
+        }
+        80%
+        {
+            transform: translateY(5px);
+        }
+        to
+        {
+            transform: translateY(0);
+        }
+    }
+    @keyframes modalOut
+    {
+        from
+        {
+            transform: translateY(0);
+        }
+        40%
+        {
+            transform: translateY(10px);
+        }
+        60%
+        {
+            transform: translateY(-10px);
+        }
+        80%
+        {
+            transform: translateY(5px);
+        }
+        to
+        {
+            transform:translateY(-1000px)
+        }
+    }
+    .close
+    {
+        width: 30px;
+        height: 30px;
+        background: red;
+        line-height: 30px;
+        color: white;
+        border-radius: 5px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+    .close:active
+    {
+        transform: scale(.9);
+    }
+    .botones button
+    {
+        width: 100px;
+        height: 40px;
+        margin:10px;
+        font-size: 1.1em;
+        border: 0;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+    }
+    .botones button:active
+    {
+        transform: scale(.9);
+    }
+    #next
+    {
+        background: green;
+    }
+    #before
+    {
+        background: red;
+    }
+    .image
+    {
+        width: 130px;
+        height: 130px;
+    }
+    .name
+    {
+        width: 150px;
+        height: 30px;
+        font-size: 1.2em;
+    }
+</style>
+<body>
+    <div class="overlay">
+        <div class="modal">
+            <div class="close"><i class="fas fa-times"></i></div>
+            <h2>Apareció un Pokemon</h2>
+            <div class="image">
+                <img src="" alt="" id="pokemon" width="130" height="130">
+            </div>
+            <div class="name"></div>
+            <div class="botones">
+                <button id="next">Siguiente</button>
+                <button id="before">Atrás</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        $pokemon=document.querySelector("#pokemon");
+        $siguiente=document.querySelector("#next");
+        $atras=document.querySelector("#before");
+        $imagen=document.querySelector(".image");
+        $nombre=document.querySelector(".name");
+        $close=document.querySelector(".close");
+        $modal=document.querySelector(".modal");
+
+        let cont=1;
+        promesa(cont)
+        function promesa(cont)
+        {
+            fetch(`https://pokeapi.co/api/v2/pokemon/${cont}`)
+            .then(response=>{return response.json()})
+            .then(data=>{
+                renderImage(data.sprites.front_default);
+                $nombre.innerHTML=`${(data.name).toUpperCase()}`
+            })
+            .catch(console.log("(Error) Siempre entra al catch de la API Fetch."))
+        }
+
+        function renderImage(image)
+        {
+            $pokemon.setAttribute("src",image);
+        }
+
+        $siguiente.addEventListener("click",()=>{
+
+            cont++;
+            promesa(cont);
+        })
+        $atras.addEventListener("click",()=>{
+            cont--;
+            promesa(cont);
+        })
+        $close.addEventListener("click",()=>{
+            $modal.style.animationName="modalOut"
+        })
+        
+    </script>
+</body>
+</html>
