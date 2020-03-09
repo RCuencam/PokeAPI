@@ -134,6 +134,10 @@
     {
         width: 130px;
         height: 130px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2em;
     }
     .name
     {
@@ -176,9 +180,10 @@
                 renderImage(data.sprites.front_default);
                 $nombre.innerHTML=`${(data.name).toUpperCase()}`
             })
-            .catch(console.log("(Error) Siempre entra al catch de la API Fetch."))
+            .catch(()=>{
+                renderImage("imagen.png")
+                $nombre.innerHTML=``})
         }
-
         function renderImage(image)
         {
             $pokemon.setAttribute("src",image);
